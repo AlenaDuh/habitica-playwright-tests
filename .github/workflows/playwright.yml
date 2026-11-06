@@ -19,9 +19,20 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         run: npx playwright test
+
+      # Шаг 1: Сохраняем HTML-отчет
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
           path: playwright-report/
+          retention-days: 30
+
+      # Шаг 2: Сохраняем текстовые логи (скриншоты, видео, ошибки)
+      - name: Save Test Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-logs
+          path: test-results/
           retention-days: 30
